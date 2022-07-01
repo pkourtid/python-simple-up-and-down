@@ -3,6 +3,9 @@
 import pygame
 from pygame.locals import *
 from pygame import mixer
+from pygame import freetype
+from os import listdir
+from os.path import isfile, isdir, join
 import random
 
 # =============================================================================
@@ -45,6 +48,9 @@ pygame.init()
 pygame.mixer.init()
 pygame.display.set_caption('Simple Up/Down')
 screen = pygame.display.set_mode((500, 500), RESIZABLE)
+strGamesFolder = "games"
+lstDirectories = [f for f in listdir(strGamesFolder) if isdir(join(strGamesFolder, f))]
+
 # =============================================================================
 
 # =============================================================================
@@ -55,6 +61,44 @@ screen = pygame.display.set_mode((500, 500), RESIZABLE)
 
 dicResources = {}
 dicResources["imgTitle"] = pygame.image.load("graphics/title.png")
+
+dicFont = {}
+dicFont["0"] = pygame.image.load("graphics/fonts/0.png")
+dicFont["1"] = pygame.image.load("graphics/fonts/1.png")
+dicFont["2"] = pygame.image.load("graphics/fonts/2.png")
+dicFont["3"] = pygame.image.load("graphics/fonts/3.png")
+dicFont["4"] = pygame.image.load("graphics/fonts/4.png")
+dicFont["5"] = pygame.image.load("graphics/fonts/5.png")
+dicFont["6"] = pygame.image.load("graphics/fonts/6.png")
+dicFont["7"] = pygame.image.load("graphics/fonts/7.png")
+dicFont["8"] = pygame.image.load("graphics/fonts/8.png")
+dicFont["9"] = pygame.image.load("graphics/fonts/9.png")
+dicFont["A"] = pygame.image.load("graphics/fonts/A.png")
+dicFont["B"] = pygame.image.load("graphics/fonts/B.png")
+dicFont["C"] = pygame.image.load("graphics/fonts/C.png")
+dicFont["D"] = pygame.image.load("graphics/fonts/D.png")
+dicFont["E"] = pygame.image.load("graphics/fonts/E.png")
+dicFont["F"] = pygame.image.load("graphics/fonts/F.png")
+dicFont["G"] = pygame.image.load("graphics/fonts/G.png")
+dicFont["H"] = pygame.image.load("graphics/fonts/H.png")
+dicFont["I"] = pygame.image.load("graphics/fonts/I.png")
+dicFont["J"] = pygame.image.load("graphics/fonts/J.png")
+dicFont["K"] = pygame.image.load("graphics/fonts/K.png")
+dicFont["L"] = pygame.image.load("graphics/fonts/L.png")
+dicFont["M"] = pygame.image.load("graphics/fonts/M.png")
+dicFont["N"] = pygame.image.load("graphics/fonts/N.png")
+dicFont["O"] = pygame.image.load("graphics/fonts/O.png")
+dicFont["P"] = pygame.image.load("graphics/fonts/P.png")
+dicFont["Q"] = pygame.image.load("graphics/fonts/Q.png")
+dicFont["R"] = pygame.image.load("graphics/fonts/R.png")
+dicFont["S"] = pygame.image.load("graphics/fonts/S.png")
+dicFont["T"] = pygame.image.load("graphics/fonts/T.png")
+dicFont["U"] = pygame.image.load("graphics/fonts/U.png")
+dicFont["V"] = pygame.image.load("graphics/fonts/V.png")
+dicFont["W"] = pygame.image.load("graphics/fonts/W.png")
+dicFont["X"] = pygame.image.load("graphics/fonts/X.png")
+dicFont["Y"] = pygame.image.load("graphics/fonts/Y.png")
+dicFont["Z"] = pygame.image.load("graphics/fonts/Z.png")
 
 # Some sounds for the game
 #sndGameOver = pygame.mixer.Sound("sounds/gameover.mp3")
@@ -122,12 +166,50 @@ def drawImage(imgObject, intOffsetX, intOffsetY, intWidth, intHeight):
     screen.blit(imgObjectResized, (decOffsetWidth + (intOffsetX*decScaleGame), decOffsetHeight + (intOffsetY*decScaleGame)))
 
 
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# Create a function to draw a sentence
+
+def drawSentence(strSentence, intOffsetX, intOffsetY, intWidth, intHeight):
+    # Iterate through all characters
+    for i in range( len(strSentence) ):
+        if strSentence[i] in dicFont:
+            # screen.blit(imgObject, (100,100))
+            imgObjectResized = pygame.transform.scale(dicFont[strSentence[i]], (intWidth*decScaleGame,intHeight*decScaleGame))
+            screen.blit(imgObjectResized, (decOffsetWidth + (intOffsetX*decScaleGame) + (((intWidth*decScaleGame))*i), decOffsetHeight + (intOffsetY*decScaleGame)))
+            
+
+
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# Create a function to load new game
+
+def loadGame(strSelectedGame):
+    global intGameState, intGameWidth, intGameHeight, dicResources
+    # Load the board
+    dicResources["imgBoard"] = pygame.image.load("games/"+strSelectedGame+"/board.png")
+    dicResources["imgPlayer1"] = pygame.image.load("games/"+strSelectedGame+"/player_1.png")
+    dicResources["imgPlayer2"] = pygame.image.load("games/"+strSelectedGame+"/player_2.png")
+    dicResources["imgPlayer3"] = pygame.image.load("games/"+strSelectedGame+"/player_3.png")
+    dicResources["imgPlayer4"] = pygame.image.load("games/"+strSelectedGame+"/player_4.png")
+    dicResources["imgPlayer5"] = pygame.image.load("games/"+strSelectedGame+"/player_5.png")
+    dicResources["imgPlayer6"] = pygame.image.load("games/"+strSelectedGame+"/player_6.png")
+    dicResources["imgPlayer7"] = pygame.image.load("games/"+strSelectedGame+"/player_7.png")
+    intGameWidth = dicResources["imgBoard"].get_width()
+    intGameHeight = dicResources["imgBoard"].get_height()
+    resize_display()
+    intGameState = 2
+    
+
 # =============================================================================
 # Starting the game loop
 # =============================================================================
 
 blnRunning = True
 resize_display()
+
+intGameState = 1
+
+loadGame("ladders")
+
 
 while blnRunning:
 
@@ -138,10 +220,25 @@ while blnRunning:
  
     # **************************
     # Ready to play the game
+    
     if (intGameState == 0):
-                   
-        drawImage(dicResources["imgTitle"], 0, 0, 250, 40)
+    
+        # Menu that allows you to load a game
+        drawImage(dicResources["imgTitle"], 0, 0, 250, 40)        
+        drawSentence("SELECT GAME", 100, 100, 10, 10)
+        drawSentence("CREDITS", 100, 120, 10, 10)
         
+    elif (intGameState == 1):
+        drawImage(dicResources["imgTitle"], 0, 0, 250, 40)      
+        for x in range(len(lstDirectories)):
+            drawSentence(lstDirectories[x].upper(), 100, 100 + (x*12) , 10, 10)
+    
+    elif (intGameState == 2):
+        drawImage(dicResources["imgTitle"], 0, 0, 250, 40)      
+        drawImage(dicResources["imgBoard"], 0, 0, dicResources["imgBoard"].get_width(), dicResources["imgBoard"].get_height())
+        drawImage(dicResources["imgPlayer1"], 160, 160, 10, 10)
+           
+            
     for event in pygame.event.get():
         if event.type == QUIT:
             blnRunning = False            
