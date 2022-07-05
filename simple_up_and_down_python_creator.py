@@ -62,6 +62,7 @@ lstDirectories = [f for f in listdir(strGamesFolder) if isdir(join(strGamesFolde
 
 dicResources = {}
 dicResources["imgTitle"] = pygame.image.load("graphics/title.png")
+dicResources["imgCursorArrowRed"] = pygame.image.load("graphics/cursor_arrow_red.png")
 
 dicFont = {}
 dicFont["0"] = pygame.image.load("graphics/fonts/0.png")
@@ -208,7 +209,7 @@ def loadGame(strSelectedGame):
     intGameWidth = dicResources["imgBoard"].get_width()
     intGameHeight = dicResources["imgBoard"].get_height()
     resize_display()
-    intGameState = 2
+    intGameState = 1
     
 
 # =============================================================================
@@ -218,47 +219,44 @@ def loadGame(strSelectedGame):
 blnRunning = True
 resize_display()
 
-intGameState = 1
+intGameState = 0
 
-loadGame("ladders")
+pygame.mouse.set_visible(False)
+# loadGame("ladders")
 
 
 while blnRunning:
-
-    # Clear the Screen
-    screen.fill(black)
-    
-    # Check the game state
- 
-    # **************************
-    # Ready to play the game
-    
-    if (intGameState == 0):
-    
-        # Menu that allows you to load a game
-        drawImage(dicResources["imgTitle"], 0, 0, 250, 40)        
-        drawSentence("SELECT GAME", 100, 100, 10, 10)
-        drawSentence("CREDITS", 100, 120, 10, 10)
-        
-    elif (intGameState == 1):
-        drawImage(dicResources["imgTitle"], 0, 0, 250, 40)      
-        for x in range(len(lstDirectories)):
-            drawSentence(lstDirectories[x].upper(), 100, 100 + (x*12) , 10, 10)
-    
-    elif (intGameState == 2):
-        drawImage(dicResources["imgTitle"], 0, 0, 250, 40)      
-        drawImage(dicResources["imgBoard"], 0, 0, dicResources["imgBoard"].get_width(), dicResources["imgBoard"].get_height())
-        drawImage(dicResources["imgPlayer1"], 160, 160, 10, 10)
-           
-            
-    for event in pygame.event.get():
-        if event.type == QUIT:
-            blnRunning = False            
-        elif event.type == VIDEORESIZE:
-            resize_display()
-        
-    pygame.display.update()
-    
+	
+	# Clear the Screen
+	screen.fill(black)
+	
+	# Check the game state
+	
+	# **************************
+	# Ready to play the game
+	
+	if (intGameState == 0):
+		
+		# Menu that allows you to load a game
+		drawImage(dicResources["imgTitle"], 0, 0, 250, 40)        
+		drawSentence("CREATE GAME STEPS", 100, 100, 10, 10)
+	
+	elif (intGameState == 1):
+		drawImage(dicResources["imgTitle"], 0, 0, 250, 40)      
+		drawImage(dicResources["imgBoard"], 0, 0, dicResources["imgBoard"].get_width(), dicResources["imgBoard"].get_height())
+		drawImage(dicResources["imgPlayer1"], 160, 160, 10, 10)
+	
+	# drawImage(dicResources["imgCursorArrowRed"], pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1], 10, 10) 
+	screen.blit(dicResources["imgCursorArrowRed"], pygame.mouse.get_pos())
+	
+	for event in pygame.event.get():
+		if event.type == QUIT:
+			blnRunning = False            
+		elif event.type == VIDEORESIZE:
+			resize_display()
+		
+	pygame.display.update()
+	
 pygame.quit()
 
         
